@@ -1,16 +1,19 @@
 const svg = d3.select('#plot');
 
-// Grab the width and height from the SVG element in HTML
+// Grab the width and height components from the SVG element in HTML
 const width = parseFloat(svg.attr('width'));
 const height = parseFloat(svg.attr('height'));
 
 
-// Data Generation 
+// Data Generation Functions
 
+// Generate random number between min and max
 const randomNum = (min, max) => {
     return Math.random() * (max - min) + min;
 }
 
+// Generate an array of 100 1-dimensional datapoints each with a corresponding y-value
+// A small random value is added to each to generate a small amount of noise, spreading the data points
 const generateData = () => {
     let xArr = [];
     for (let i = 0; i < 100; ++i) xArr[i] = randomNum(-2.5, 2.5);
@@ -41,11 +44,10 @@ const generateData = () => {
 
 var [data, X, Y] = generateData();
 
-// Render function used for producing rectangles for each data point in dataset
+// Render function used for producing the scatter plot of each data points and a line of best fit for the model
 const render = (data, bestFit) => {
 
     // Variables used for controlling properties of the plot
-    
     const xValue = d => d.x;
     const yValue = d => d.y;
     const margin = {top: 20, bottom: 60, left: 50, right: 20}
@@ -70,15 +72,12 @@ const render = (data, bestFit) => {
         .range([0, innerHeight])
         .nice();
     
-
+    // Axis customisation
     const g = svg.append('g')
         .attr('transform', `translate(${margin.left}, ${margin.top})`)
 
-
-
     const yAxis = d3.axisLeft(yScale)
         .tickSize(-innerWidth)
-    
 
     const xAxisTickFormat = number => d3.format('.3')(number);
     const xAxis = d3.axisBottom(xScale)
@@ -129,7 +128,10 @@ const render = (data, bestFit) => {
         .attr('y', -5)
         .attr('text-anchor', 'middle')
         .text(title)
-
+    
+    // If we pass an array consisting of the predicted values the function will produce a line of best fit according to these
+    // Otherwise, in cases where this is not required such as on initisalisation, an empty array is passed instead omitting this 
+    // through the if condition below.
     if (bestFit.length > 0) {
 
         const lineGenerator = d3.line()
@@ -146,14 +148,9 @@ const render = (data, bestFit) => {
     }
 };
 
-
-//render(data);
-
 render(data, []);
 
-
-// Sliders
-
+// Sliders Options
 let sliderLeft = document.getElementById("sliderL");
 let sliderMid = document.getElementById("sliderM");
 let sliderRight = document.getElementById("sliderR");
@@ -182,14 +179,14 @@ sliderRight.oninput = () => {
     batch_size = +sliderRight.value;
   }
 
-// Reload Dataset
-
+// Reload Dataset Button
 let reload = document.getElementById("reloadButton");
 
 let loss = "N/A";
 let epoch = 0;
 let iter = 0;
 
+// On clicking the button, a new dataset is generated and the plot re-renders.
 reloadButton.onclick = () => {
     d3.selectAll("#plot > *").remove();
     const values = generateData();
@@ -201,10 +198,8 @@ reloadButton.onclick = () => {
     return [data, X, Y];
   }
 
-
-
-// Linear Regression Model
-
+// A simple sleep function used for slowing down the iterations during training in an attempt to provide a 
+// more effective visualisation.
 function sleep(milliseconds) {
     const date = Date.now();
     let currentDate = null;
@@ -213,6 +208,9 @@ function sleep(milliseconds) {
     } while (currentDate - date < milliseconds);
   }
 
+// Linear Regression Model built in TensorFlow.js
+
+// A function to re-render the line of best fit at each iteration, displaying the update.
 const snapRender = (model) => {
     let y = []
     y[0] = +model.predict(tf.tensor2d([-2.4], [1, 1])).dataSync()[0]
@@ -232,21 +230,21 @@ const snapRender = (model) => {
     render(data, bestFit);
 }
 
-// Training Function
+// Asynchronous Training Function
 async function trainModel(inputs, labels, lr, batch_size, epochs) {
     
-    console.log("HERE")
-    // Prepare the model for training.  
-    
+    // Building the model
     const model = tf.sequential();
-
+    
+    // Input Layer
     model.add(tf.layers.dense({inputShape: [1], units: 1, useBias: false}));
   
-    // Output
+    // Output Layer
     model.add(tf.layers.dense({units: 1, useBias: true}));
 
     snapRender(model);
-
+    
+    // Model is trained using SGD and MSE
     model.compile({
         optimizer: tf.train.sgd(lr),
         loss: 'meanSquaredError',
@@ -261,11 +259,11 @@ async function trainModel(inputs, labels, lr, batch_size, epochs) {
         shuffle: true,
         callbacks: {
             onBatchEnd: async (epoch, logs) => {
-                let y = []
-                y[0] = +model.predict(tf.tensor2d([-2.4], [1, 1])).dataSync()[0]
-                y[1] = +model.predict(tf.tensor2d([2.4], [1, 1])).dataSync()[0]
+                let y = [];
+                y[0] = +model.predict(tf.tensor2d([-2.4], [1, 1])).dataSync()[0];
+                y[1] = +model.predict(tf.tensor2d([2.4], [1, 1])).dataSync()[0];
 
-                const bestFit = [{"x": -2.4}, {"x": 2.4}]
+                const bestFit = [{"x": -2.4}, {"x": 2.4}];
                 let i = 0;
                 bestFit.forEach( d => {
                     d.x = +d.x
@@ -292,12 +290,7 @@ async function trainModel(inputs, labels, lr, batch_size, epochs) {
     });
 }
 
-console.log("Test");
-
-//trainModel(xTensor, yTensor, lr, batch_size, 1)
-
-console.log("Done");
-
+// Train button, used to trigger the training loop
 let trainButton = document.getElementById("startButton")
 
 trainButton.onclick = () => {
