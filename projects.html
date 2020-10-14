@@ -1,0 +1,123 @@
+<!DOCTYPE HTML>
+<!--
+	Epilogue by TEMPLATED
+	templated.co @templatedco
+	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+-->
+<html>
+	<head>
+		<link rel="stylesheet" href="assets/css/main.css" />
+	</head>
+	<body>
+
+		<!-- Header -->
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Banner -->
+					<div id="wrapper">
+
+				<!-- Banner -->
+					<section id="intro" class="main">
+						<!-- D3 -->
+						<script src="https://unpkg.com/d3@6.2.0/dist/d3.min.js"></script>
+						<!-- TensorFlowJS -->
+						<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
+						<span>
+							<a href="index.html"> 
+                                <svg width="75" height="80" viewBox="0 0 75 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M7.14297 21.3333L41.1654 80H7.14284L7.14297 21.3333Z" fill="#C4C4C4"/>
+                                    <path d="M67.8573 21.3333V80H33.8348L67.8573 21.3333Z" fill="#C4C4C4"/>
+                                    <path d="M37.5 64L0 0H75L37.5 64Z" fill="#C4C4C4"/>
+                                </svg>
+                            </a>
+						</span>
+							
+                        <br><br>
+                        <div style="text-align: center; font-size: 5vw; font-family: myfont; padding-bottom: 2vw;">Visualising Training</div>
+						<div style="text-align: justify;">
+						<p style="text-align-last: center;">Machine learning models are not functional out of the box, they require a period of training during which they learn to represent the dataset presented to them. 
+							This project aims to visualise this training process in the case of a simple linear regression model which trains on a randomly generated dataset consisting of 100 data points.
+							Below you can tweak some of the hyperparameters present in machine learning models.
+ 
+						   <br> <br>
+						   There are a few things to note before using the tools below. This is a very simple problem and hence sometime the random initialisation of the model can prove sufficiently
+                           good, resulting in little change in loss hence it is good to perform a few runs and observe the behaviour. Furthermore, the model proves capable of learning the data within
+                           the first few iterations as a result of which it is recommended to explore the low learning rates first to visualise the convergent performance of the model. Finally, at large
+                           learning rates, the model may be sufficiently perturbed to cause a divergence resulting in a loss of NAN in which case it is advised to reload the dataset and try again.
+
+						</p>
+						<br><br>
+						<p style="font-weight: bold; text-align: center;">To break the start command, simply refresh the page.
+						</p>
+						</div>
+						<div id="slider_outer">
+							<div class="slider" id="sliderLeft" style=" width: 33%; float: left;">
+								Learning Rate
+								<br>
+								<input type="range" min="0" max="0.2" value="0.1" step="0.01" id="sliderL">
+        						<h2 id="outputLeft"></h2>
+							</div>
+							<div class="slider" id="sliderMid" style=" width: 33%; display: inline-block;">
+								Number of Training Epochs
+								<br>
+								<input type="range" min="0" max="20" value="10" id="sliderM">
+        						<h2 id="outputMid"></h2>
+							</div>
+							<div class="slider" id="sliderRight" style="width: 33%; float: right;">
+								Batch Size
+								<br>
+								<input type="range" min="1" max="100" value="10" step="1" id="sliderR">
+        						<h2 id="outputRight"></h2>
+							</div>
+						</div>
+
+
+						<div id="slider_outer">
+							<div class="slider" id="sliderLeft" style=" width: 33%; float: left;">
+								Loss
+								<br>
+        						<h2 id="outputLoss">N/A</h2>
+							</div>
+							<div class="slider" id="sliderMid" style=" width: 33%; display: inline-block;">
+								Iteration
+								<br>
+        						<h2 id="outputIteration">0</h2>
+							</div>
+							<div class="slider" id="sliderRight" style="width: 33%; float: right;">
+								Epoch
+								<br>
+        						<h2 id="outputEpoch">0</h2>
+							</div>
+						</div>
+
+						<ul class="actions">
+							<li><a id="startButton" class="button">Start</a></li>
+							<li><a class="button" id="reloadButton">Reload</a></li>
+						</ul>
+
+                        <div>
+                            <svg id="plot" width="600" height="600" ></svg>
+                        </div>
+                        <script src="mltraining.js"></script>
+
+					</section>
+				<!-- Items -->
+
+
+				<!-- Footer -->
+					<footer id="footer">
+						<p class="copyright">&copy; Mateusz Syrek, 2020</a>.</p>
+					</footer>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
