@@ -1,8 +1,8 @@
 # JS-Training-Visualisation
 
 <p align="center">
-  <img src="assets/d3.png" width="150" height="150" /></img>
-  <img src="assets/tf.png" width="150" height="150" /></img>
+  <img src="assets/d3.png" target="" width="150" height="150" /></img>
+  <img src="assets/tf.png" target="" width="150" height="150" /></img>
 </p>
 
 The D3 library in JavaScript provides an excellent way of producing interactive visualisations which prove particularly useful in data science.
